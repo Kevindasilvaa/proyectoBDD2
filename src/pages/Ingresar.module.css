@@ -1,0 +1,77 @@
+.div_principal {
+    display: flex;
+    flex-direction: row;
+    margin: 5%;
+    background-color: #1C2C54;
+    color: white;
+
+}
+div p{
+    
+}
+
+.div_inputs{
+    display: flex;
+    flex-direction: column;
+    margin-top: 10%;
+    margin-left: 5%;
+    margin-right: 5%;
+    margin-bottom: 5%;
+}
+.encabezado{
+    text-align: center;
+}
+.div_enlaces{
+    display: flex;
+    flex-direction: column;
+    margin-top: 10%;
+    margin-left: 5%;
+    margin-right: 5%;
+    margin-bottom: 5%;
+}
+.linea_horizontal {
+  background-color: white;
+  border-top: 2px solid;
+}
+.errorLabel {
+    color: red;
+    font-size: 12px;
+}
+.inputBox {
+    height: 50%;
+    width: 100%;
+    font-size: large;
+    border-radius: 8px;
+    border: 1px solid grey;
+    padding-left: 8px;
+  }
+  .button{
+    border: none;
+    background: #D175B7;
+    color: white;
+    width: 100%;
+    height: 70%;
+    font-size: 24px;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  .butt{
+    border-radius: 8px;
+    cursor: pointer;
+    width: 100%;
+    height: 70%;
+    background-color: white;
+    box-sizing: border-box;
+    border-color: white;
+  }
+  .titleContainer {
+    display: flex;
+    color: #ffffff;
+    flex-direction: column;
+    font-size: 44px;
+    font-weight: bolder;
+    align-items: center;
+    justify-content: center;
+  }
+
+

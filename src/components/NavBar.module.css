@@ -1,0 +1,57 @@
+*{
+  font-family: "Pixelify Sans", sans-serif;
+}
+
+.header {
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box; 
+    justify-content: space-between;
+    padding: 1.5rem 1rem;
+    width: 100%;
+    color: #ffffff;
+    font-family: "Pixelify Sans", sans-serif;
+    font-size: 1.5rem;
+    font-optical-sizing: auto;
+    font-style: normal;
+  
+    top: 0;
+    left: 0;
+    background-color: #010402;
+  
+
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+  
+      .nav-link {
+        color: #D175B7;
+        font-size: 1.5rem;
+        text-decoration: none;
+        transition: color 0.3s;
+        transition: transform 0.5s; 
+  
+        &:hover {
+          color: #d29ac2;
+          transform: scale(1.1);
+        }
+  
+        &.active {
+          color: #ffe6f8;
+          transition: color 0.3s;
+        }
+      }
+    }
+  }
+
+  
+
+.icon{
+    margin-right: 2rem;
+    object-fit: contain;
+  }
+
+
