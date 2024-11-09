@@ -1,0 +1,23 @@
+.book {
+    display: flex; /* This makes the child elements align side-by-side */
+    align-items: flex-start; /* Align items at the top */
+    margin-bottom: 20px;
+    background-color: #ddf0ff;
+    border-radius: 8px;
+    overflow: hidden;
+    padding: 10px;
+    color: #000;
+    margin-top: auto;
+  }
+  
+  .bookCover {
+    width: 150px;
+    height: auto;
+    object-fit: cover;
+    margin-right: 20px; /* Space between the image and text */
+  }
+  
+  .bookDetails {
+    flex: 1; /* This makes the details section take up the remaining space */
+  }
+  

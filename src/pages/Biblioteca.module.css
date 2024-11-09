@@ -1,3 +1,23 @@
 .div_principal{
     padding: 5%;
+    align-items: center;
+    display:flex
 }
+.search-bar-container {
+    margin-bottom: 20px;
+    margin-top: 40px;
+    
+  }
+
+  .searchBarContainer {
+    
+    background-color: #1C2C54; /* Match the dark background color of the page */
+    padding: 10px 10px; /* Optional: Adds padding inside the search bar container */
+  }
+  
+  
+  .bookList {
+    margin-top: 20px; /* Adjust the spacing as needed */
+  }
+
+  
