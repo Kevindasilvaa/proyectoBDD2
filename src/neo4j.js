@@ -18,13 +18,33 @@ export const createNeo4jUser = async (name, email, country) => {
 
     // Crear la relación LIVES_IN si el nodo Country existe
     await session.run(
-      `MATCH (u:User), (c:Country {country: $country})
+      `MATCH (u:User), (c:Country {name: $country})
        WHERE id(u) = $userId
        MERGE (u)-[:LIVES_IN]->(c)`,
       { country, userId }
     );
   } catch (error) {
     console.error("Error creating Neo4j user or setting LIVES_IN relationship:", error);
+    throw error;
+  } finally {
+    await session.close();
+  }
+};
+
+export const getAllCountries = async () => {
+  const session = driver.session();
+
+  try {
+    const result = await session.run(
+      `MATCH (c:Country) RETURN c`
+    );
+
+    // Convertir los registros a un arreglo de objetos
+    const countries = result.records.map(record => record.get('c').properties);
+
+    return countries;
+  } catch (error) {
+    console.error("Error getting all countries:", error);
     throw error;
   } finally {
     await session.close();

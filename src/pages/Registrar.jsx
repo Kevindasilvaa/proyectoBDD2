@@ -7,10 +7,15 @@ import { ingresarGoogle, registerWithCredentials } from '../controllers/auth';
 
 import {GoogleLoginButton} from 'react-social-login-buttons';
 import picture1 from '../img/image.png';
+import { getAllCountries } from '../neo4j';
+import TextField from '@mui/material/TextField';
+import MenuItem from '@mui/material/MenuItem';
 
 
 export default function Registar() {
     const navigate = useNavigate();
+    const [countries, setCountries] = useState([]); // Estado para los países
+    const [isLoading, setIsLoading] = useState(false); // Estado de carga
     const [email,setEmail] = useState("");
     const [country,setCountry] = useState("");
     const [password, setPassword] = useState("");
@@ -31,6 +36,17 @@ export default function Registar() {
         });
     }, []);
 
+    useEffect(() => {
+        const fetchCountries = async () => {
+          setIsLoading(true); // Indica que se están cargando los países
+          const fetchedCountries = await getAllCountries();
+          setCountries(fetchedCountries);
+          setIsLoading(false); // Indica que la carga ha finalizado
+        };
+    
+        fetchCountries();
+      }, []);
+
     function register(){
         // Set initial error values to empty
         setEmailError("");
@@ -48,7 +64,7 @@ export default function Registar() {
             setEmailError("Por favor coloca tu email");
             return;
         }
-        if ("" === country) {
+        if ("Selecciona un país" === country || country === "") {
             setCountryError("Por favor coloca tu country");
             return;
         }
@@ -109,20 +125,19 @@ export default function Registar() {
                     <br />
                     <input 
                     type="text" 
-                    placeholder="Country"
-                    className={styles.inputBox}
-                    onChange={(ev) => setCountry(ev.target.value)}
-                    />
-                    <label className={styles.errorLabel}>{countryError}</label>
-                    <br />
-                    <input 
-                    type="text" 
                     placeholder="Contraseña"
                     className={styles.inputBox}
                     onChange={(ev) => setPassword(ev.target.value)}
                     />
                     <label className={styles.errorLabel}>{passwordError}</label>
                     <br />
+                    <select id="country" className={styles.customSelect} onChange={(ev) => setCountry(ev.target.value)}>
+                        <option value="">Selecciona un país</option>
+                        {countries.map((type) => (
+                            <option key={type.name} value={type.name}>{type.name}</option>
+                        ))}
+                    </select>
+                    <label className={styles.errorLabel}>{countryError}</label>
                 </div>
                 {/**ENLACES A OTRAS PAGINAS */}
                 <div className={styles.div_enlaces}>
