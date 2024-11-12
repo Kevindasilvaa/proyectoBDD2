@@ -8,8 +8,7 @@ import { ingresarGoogle, registerWithCredentials } from '../controllers/auth';
 import {GoogleLoginButton} from 'react-social-login-buttons';
 import picture1 from '../img/image.png';
 import { getAllCountries } from '../neo4j';
-import TextField from '@mui/material/TextField';
-import MenuItem from '@mui/material/MenuItem';
+import img_cargando from '../img/cargando.gif';
 
 
 export default function Registar() {
@@ -30,8 +29,6 @@ export default function Registar() {
         onAuthStateChanged(auth, (user) => {
         if (user) {
             navigate("/Biblioteca");
-        } else {
-            console.log("Error en el useefect de la pagina Ingresar");  
         }
         });
     }, []);
@@ -45,7 +42,15 @@ export default function Registar() {
         };
     
         fetchCountries();
-      }, []);
+    }, []);
+
+    if (isLoading) {
+        return (
+          <div style={{ display: "flex", justifyContent: "center", alignItems: "center" , height: "100vh"}}>
+            <img width="40%" height="20%" src={img_cargando}/>
+          </div>
+        );
+    }
 
     function register(){
         // Set initial error values to empty
