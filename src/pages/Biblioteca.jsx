@@ -10,6 +10,7 @@ export default function Biblioteca() {
   const navigate = useNavigate();
   const [filterValue, setFilterValue] = useState('');
   const [books, setBooks] = useState([]);
+  const [favorites, setFavorites] = useState([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -18,7 +19,23 @@ export default function Biblioteca() {
         navigate('/');
       }
     });
+
+    // Cargar favoritos de localStorage al montar el componente
+    const storedFavorites = localStorage.getItem('favorites');
+    setFavorites(storedFavorites ? JSON.parse(storedFavorites) : []);
   }, [navigate]);
+
+  // Actualizar favoritos en localStorage y en el estado
+  const toggleFavorite = (book) => {
+    let updatedFavorites;
+    if (favorites.some(fav => fav.title === book.title)) {
+      updatedFavorites = favorites.filter(fav => fav.title !== book.title);
+    } else {
+      updatedFavorites = [...favorites, book];
+    }
+    setFavorites(updatedFavorites);
+    localStorage.setItem('favorites', JSON.stringify(updatedFavorites));
+  };
 
   async function buscador(e) {
     e.preventDefault();
@@ -39,7 +56,7 @@ export default function Biblioteca() {
   }
 
   return (
-    <div style={{ height: '100vh', backgroundColor: '#1C2C54', color: 'white'}}>
+    <div style={{ height: '100vh', backgroundColor: '#1C2C54', color: 'white' }}>
       <div className={`search-bar-container ${styles.searchBarContainer}`}>
         <form className="d-flex">
           <input
@@ -57,7 +74,7 @@ export default function Biblioteca() {
       {loading ? (
         <p className="text-center">Searching books...</p>
       ) : (
-        <div className={`container ${styles.bookList}`}> {/* Added custom class */}
+        <div className={`container ${styles.bookList}`}>
           <div className="row">
             {books.length > 0 ? (
               books.map((book, index) => {
@@ -68,6 +85,8 @@ export default function Biblioteca() {
                 const author = book.author_name ? book.author_name.join(', ') : 'Unknown Author';
                 const publishedYear = book.first_publish_year || 'Unknown Year';
 
+                const isFavorite = favorites.some(fav => fav.title === book.title);
+
                 return (
                   <div className="col-md-6 mb-4" key={index}>
                     <Book
@@ -75,6 +94,13 @@ export default function Biblioteca() {
                       author={author}
                       publishedYear={publishedYear}
                       coverUrl={coverUrl}
+                      isFavorite={isFavorite}
+                      onToggleFavorite={() => toggleFavorite({
+                        title: book.title,
+                        author,
+                        publishedYear,
+                        coverUrl
+                      })}
                     />
                   </div>
                 );
