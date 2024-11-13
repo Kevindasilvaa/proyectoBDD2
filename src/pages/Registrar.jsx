@@ -9,6 +9,7 @@ import {GoogleLoginButton} from 'react-social-login-buttons';
 import picture1 from '../img/image.png';
 import { getAllCountries } from '../neo4j';
 import img_cargando from '../img/cargando.gif';
+import { useUser } from '../context/user';
 
 
 export default function Registar() {
@@ -23,6 +24,7 @@ export default function Registar() {
     const [passwordError, setPasswordError] = useState("");
     const [nameError, setNameError] = useState("");
     const [countryError,setCountryError] = useState("");
+    const {user,setUser} = useUser();
 
     //cada vez que el auth cambie pasara por aqui
     useEffect(() => {
@@ -90,13 +92,24 @@ export default function Registar() {
         registerWithCredentials(email,password,name,country);
     }
 
-    function registrarConGoogle(){ 
+    async function registrarConGoogle(){ 
         setCountryError("");
         if(country === ""){
             setCountryError("Por favor coloca tu Country antes de registrarte con Google");
             return;
         }
-        ingresarGoogle(country);
+        //Si user == null entonces no hay sesion iniciada.En caso contrario hay una sesion iniciada.
+        if( user == null){
+            //verifica las credenciales y de ser validas, cambiara el estado de user
+            const x = await ingresarGoogle(country);
+            if(x === true){
+                navigate("/Biblioteca");
+                alert("Has iniciado sesion con una cuenta de google que no estaba registrada! \n Rellena los datos de tu perfil.");
+            }
+
+        }else{
+            alert("Actualmente hay una sesion iniciada.Cierra sesion para iniciar con otro usuario.");
+        }
     }
 
     return (
