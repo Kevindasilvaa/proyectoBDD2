@@ -14,28 +14,13 @@ export default function Biblioteca() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    // Redirigir si el usuario no está autenticado
     onAuthStateChanged(auth, (user) => {
       if (user === null) {
         navigate('/');
       }
     });
-
-    // Cargar favoritos de localStorage al montar el componente
-    const storedFavorites = localStorage.getItem('favorites');
-    setFavorites(storedFavorites ? JSON.parse(storedFavorites) : []);
-  }, [navigate]);
-
-  // Actualizar favoritos en localStorage y en el estado
-  const toggleFavorite = (book) => {
-    let updatedFavorites;
-    if (favorites.some(fav => fav.title === book.title)) {
-      updatedFavorites = favorites.filter(fav => fav.title !== book.title);
-    } else {
-      updatedFavorites = [...favorites, book];
-    }
-    setFavorites(updatedFavorites);
-    localStorage.setItem('favorites', JSON.stringify(updatedFavorites));
-  };
+  });
 
   async function buscador(e) {
     e.preventDefault();
