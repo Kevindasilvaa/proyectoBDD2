@@ -52,15 +52,15 @@ export const getAllCountries = async () => {
 };
 
 // Función para manejar el "me gusta"
-export const handleLike = async (userId, bookTitle, bookAuthor, publishedYear, coverUrl, isFavorite) => {
+export const handleLike = async (email, bookTitle, bookAuthor, publishedYear, coverUrl, isFavorite) => {
   const session = driver.session();
   try {
     if (isFavorite) {
       // Caso: Eliminar la relación LIKES_IT
       await session.run(
-        `MATCH (u:User {id: $userId})-[r:LIKES_IT]->(b:Book {title: $bookTitle})
+        `MATCH (u:User {email: $email})-[r:LIKES_IT]->(b:Book {title: $bookTitle})
          DELETE r`,
-        { userId, bookTitle }
+        { email, bookTitle }
       );
       return { message: 'Relación "me gusta" eliminada' };
     } else {
@@ -69,7 +69,7 @@ export const handleLike = async (userId, bookTitle, bookAuthor, publishedYear, c
         `
         MERGE (b:Book {title: $bookTitle})
         ON CREATE SET b.author = $bookAuthor, b.publishedYear = $publishedYear, b.coverUrl = $coverUrl
-        MERGE (u:User {id: $userId})
+        MERGE (u:User {email: $email})
         MERGE (u)-[:LIKES_IT]->(b)
         `,
         { userId, bookTitle, bookAuthor, publishedYear, coverUrl }
@@ -90,7 +90,7 @@ export const checkIfUserLikesBook = async (email, bookTitle) => {
   try {
     const result = await session.run(
       `
-      MATCH (u:User {id: $userId})
+      MATCH (u:User {email: $email})
       OPTIONAL MATCH (u)-[r:LIKES_IT]->(b:Book {title: $bookTitle})
       RETURN COUNT(r) > 0 AS isLiked
       `,

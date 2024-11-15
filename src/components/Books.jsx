@@ -1,10 +1,10 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import styles from './Books.module.css';
-import { UserContext } from 'src/context/user.js'
-import { checkIfUserLikesBook,  handleLike } from 'src/neo4j.js';
+import { UserContext } from '../context/user';
+import { checkIfUserLikesBook,  handleLike } from '../neo4j.js';
 
 
-function Book({ title, author, publishedYear, coverUrl, isFavorite}) {
+function Book({ title, author, publishedYear, coverUrl}) {
 
   const { user } = useContext(UserContext); 
   const [isFavorite, setIsFavorite] = useState(false); // Estado inicial del favorito
@@ -12,16 +12,17 @@ function Book({ title, author, publishedYear, coverUrl, isFavorite}) {
 
   useEffect(() => {
     const fetchFavoriteStatus = async () => {
-      if (!user) {
-        console.error('No hay un usuario autenticado.');
+      if (!user || !user.email) {
+        console.error('No hay un usuario autenticado o falta el correo electrónico.');
         return;
       }
   
       try {
-        const isLiked = await checkIfUserLikesBook(user.id, title);
+        const isLiked = await checkIfUserLikesBook(user.email, title);
+        console.log('Estado de favorito:', isLiked); // Log para verificar
         setIsFavorite(isLiked);
       } catch (error) {
-        console.error('Error al verificar el estado de favorito:', error);
+        console.error('Error al verificar el estado de favorito:', error);   
       } finally {
         setLoading(false);
       }
@@ -31,9 +32,14 @@ function Book({ title, author, publishedYear, coverUrl, isFavorite}) {
   }, [user, title]);
 
   const handleToggleFavorite = async () => {
+    
+    if (!user || !user.email) {
+      console.error('No hay un usuario autenticado o falta el correo electrónico.');
+      return;
+    }
     try {
       const response = await handleLike(
-        user.id,
+        user.email,
         title,
         author,
         publishedYear,
@@ -41,8 +47,8 @@ function Book({ title, author, publishedYear, coverUrl, isFavorite}) {
         isFavorite
       );
 
-      console.log(response.message);
-      setIsFavorite(!isFavorite);
+      console.log('Respuesta de handleLike:', response);
+      setIsFavorite((prevState) => !prevState);
     } catch (error) {
       console.error('Error al manejar "me gusta":', error);
     }
@@ -76,6 +82,7 @@ function Book({ title, author, publishedYear, coverUrl, isFavorite}) {
               onClick={handleToggleFavorite}
               className={`btn ${isFavorite ? 'btn-danger' : 'btn-outline-danger'}`}
               style={{ position: 'absolute', top: '10px', right: '10px' }}
+              disabled={loading}
             >
               {isFavorite ? '❤️' : '♡'}
             </button>
