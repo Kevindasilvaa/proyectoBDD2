@@ -72,7 +72,7 @@ export const handleLike = async (email, bookTitle, bookAuthor, publishedYear, co
         MERGE (u:User {email: $email})
         MERGE (u)-[:LIKES_IT]->(b)
         `,
-        { userId, bookTitle, bookAuthor, publishedYear, coverUrl }
+        { email, bookTitle, bookAuthor, publishedYear, coverUrl }
       );
       return { message: 'Relación "me gusta" creada' };
     }
@@ -94,7 +94,7 @@ export const checkIfUserLikesBook = async (email, bookTitle) => {
       OPTIONAL MATCH (u)-[r:LIKES_IT]->(b:Book {title: $bookTitle})
       RETURN COUNT(r) > 0 AS isLiked
       `,
-      { userId, bookTitle }
+      { email, bookTitle }
     );
 
     // Devuelve true si se encontró la relación LIKES_IT, de lo contrario false
