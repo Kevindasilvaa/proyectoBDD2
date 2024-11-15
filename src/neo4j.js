@@ -51,4 +51,60 @@ export const getAllCountries = async () => {
   }
 };
 
+// Función para manejar el "me gusta"
+export const handleLike = async (userId, bookTitle, bookAuthor, publishedYear, coverUrl, isFavorite) => {
+  const session = driver.session();
+  try {
+    if (isFavorite) {
+      // Caso: Eliminar la relación LIKES_IT
+      await session.run(
+        `MATCH (u:User {id: $userId})-[r:LIKES_IT]->(b:Book {title: $bookTitle})
+         DELETE r`,
+        { userId, bookTitle }
+      );
+      return { message: 'Relación "me gusta" eliminada' };
+    } else {
+      // Caso: Crear el nodo y la relación LIKES_IT
+      await session.run(
+        `
+        MERGE (b:Book {title: $bookTitle})
+        ON CREATE SET b.author = $bookAuthor, b.publishedYear = $publishedYear, b.coverUrl = $coverUrl
+        MERGE (u:User {id: $userId})
+        MERGE (u)-[:LIKES_IT]->(b)
+        `,
+        { userId, bookTitle, bookAuthor, publishedYear, coverUrl }
+      );
+      return { message: 'Relación "me gusta" creada' };
+    }
+  } catch (error) {
+    console.error("Error handling like operation:", error);
+    throw error;
+  } finally {
+    await session.close();
+  }
+};
+
+export const checkIfUserLikesBook = async (email, bookTitle) => {
+  const session = driver.session();
+
+  try {
+    const result = await session.run(
+      `
+      MATCH (u:User {id: $userId})
+      OPTIONAL MATCH (u)-[r:LIKES_IT]->(b:Book {title: $bookTitle})
+      RETURN COUNT(r) > 0 AS isLiked
+      `,
+      { userId, bookTitle }
+    );
+
+    // Devuelve true si se encontró la relación LIKES_IT, de lo contrario false
+    return result.records.length > 0 && result.records[0].get('isLiked');
+  } catch (error) {
+    console.error('Error al verificar relación LIKES_IT:', error);
+    throw error;
+  } finally {
+    await session.close();
+  }
+};
+
 export default driver;
