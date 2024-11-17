@@ -43,7 +43,7 @@ export default function MeGusta() {
 
   return (
     <div style={{ height: "100vh", backgroundColor: "#1C2C54", color: "white" }}>
-      <h1>Favoritos</h1>
+      <h1 style={{ marginLeft: "30px" }}>Favoritos</h1>
       {loading ? (
         <p className="text-center">Cargando tus libros favoritos...</p>
       ) : (
