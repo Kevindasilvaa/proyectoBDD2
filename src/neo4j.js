@@ -134,4 +134,31 @@ export const getLikedBooks = async (email) => {
   }
 };
 
+export const getRecommedBooks = async (email) => {
+  const session = driver.session();
+
+  try {
+    const result = await session.run(
+      `
+      MATCH (u:User {email: $email})-[:RECOMMEND_FOR]->(b:Book)
+      RETURN b.title AS title, b.author AS author, b.publishedYear AS publishedYear, b.coverUrl AS coverUrl
+      `,
+      { email }
+    );
+
+    // Extraer datos de los libros de los resultados de la consulta
+    return result.records.map((record) => ({
+      title: record.get('title'),
+      author: record.get('author'),
+      publishedYear: record.get('publishedYear'),
+      coverUrl: record.get('coverUrl'),
+    }));
+  } catch (error) {
+    console.error('Error al obtener libros recomendados desde Neo4j:', error);
+    throw error;
+  } finally {
+    await session.close();
+  }
+};
+
 export default driver;
