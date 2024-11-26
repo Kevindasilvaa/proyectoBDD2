@@ -44,7 +44,7 @@ export default function Recomendaciones() {
   }, [navigate, user]);
 
   return (
-    <div style={{ backgroundColor: "#1C2C54", color: "white" }}>
+    <div style={{ minHeight: "100vh", backgroundColor: "#1C2C54", color: "white" }}>
       <h1 style={{ marginLeft: "30px" }}>Recomendaciones</h1>
       {loading ? (
         <p className="text-center">Cargando las recomendaciones para tus libros...</p>
