@@ -140,8 +140,12 @@ export const getRecommedBooks = async (email) => {
   try {
     const result = await session.run(
       `
-      MATCH (u:User {email: $email})-[:RECOMMEND_FOR]->(b:Book)
-      RETURN b.title AS title, b.author AS author, b.publishedYear AS publishedYear, b.coverUrl AS coverUrl
+      MATCH (u:User {email: $email})-[:LIKES_IT]->(b:Book)
+      WITH collect(b.author) AS likedAuthors, collect(b.title) AS likedBookTitles
+      UNWIND likedAuthors AS author
+      MATCH (b2:Book) 
+      WHERE b2.author = author AND NOT b2.title IN likedBookTitles
+      RETURN b2.title AS title, b2.author AS author, b2.publishedYear AS publishedYear, b2.coverUrl AS coverUrl
       `,
       { email }
     );

@@ -1,4 +1,4 @@
-import styles from './MeGusta.module.css';
+import styles from './Recomendaciones.module.css';
 import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -44,7 +44,7 @@ export default function Recomendaciones() {
   }, [navigate, user]);
 
   return (
-    <div style={{ height: "100vh", backgroundColor: "#1C2C54", color: "white" }}>
+    <div style={{ backgroundColor: "#1C2C54", color: "white" }}>
       <h1 style={{ marginLeft: "30px" }}>Recomendaciones</h1>
       {loading ? (
         <p className="text-center">Cargando las recomendaciones para tus libros...</p>
